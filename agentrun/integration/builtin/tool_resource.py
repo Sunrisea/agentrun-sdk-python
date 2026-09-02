@@ -10,6 +10,7 @@ from agentrun.integration.utils.tool import CommonToolSet
 from agentrun.tool.client import ToolClient
 from agentrun.tool.tool import Tool as ToolResourceType
 from agentrun.utils.config import Config
+from agentrun.utils.log import logger
 
 
 def tool_resource(
@@ -38,6 +39,24 @@ def tool_resource(
         >>> # 转换为 LangChain 工具 / Convert to LangChain tools
         >>> lc_tools = ts.to_langchain()
     """
+
+    if isinstance(input, str):
+        from agentrun.compat.agentcore import (
+            is_agentcore_runtime,
+            managed_mcp_tools,
+        )
+
+        if is_agentcore_runtime():
+            from agentcore.errors import MCPServerNotFoundError
+
+            try:
+                return managed_mcp_tools(input)
+            except MCPServerNotFoundError:
+                logger.info(
+                    "AgentCore MCP resource not found; keeping AgentRun route: "
+                    "resource=%s",
+                    input,
+                )
 
     resource = (
         input

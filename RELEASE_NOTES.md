@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Features
+
+- Added `AGENTRUN_RUNTIME=agentcore` migration mode. Existing AgentRun Model,
+  MCP, and Skill integration calls route to AgentCore when they refer to a
+  managed resource. Direct resources and unsupported capabilities continue to
+  use the original AgentRun implementation.
+- Routing is selected before a data-plane request is sent. In migration mode,
+  an exact ModelConnection or MCP name miss during AgentCore resource discovery
+  keeps the original AgentRun route. Other discovery errors and all failed
+  AgentCore data-plane requests are not retried through AgentRun.
+- AgentScope 1.x on Python 3.10 keeps the original AgentRun model route;
+  AgentScope 2.x on Python 3.11+ uses the AgentCore adapter.
+
 ### Breaking Changes
 
 - Sandbox data-plane HTTP JSON APIs now follow standard HTTP error handling:

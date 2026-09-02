@@ -223,3 +223,35 @@ SDK 会自动读取以下环境变量：
 | `AGENTRUN_DATA_ENDPOINT` | 数据端点 | - |
 | `AGENTRUN_SDK_DEBUG` | 开启 DEBUG 日志 | - |
 
+## AgentCore 迁移兼容模式
+
+在 AgentCore 高代码运行环境中设置以下变量，即可保持原有 AgentRun
+集成 API 不变，并按能力选择后端：
+
+```bash
+export AGENTRUN_RUNTIME=agentcore
+```
+
+| 原调用 | AgentCore 模式下的行为 |
+|--------|-----------------------|
+| `model("name")` | 按名称访问 AgentCore 托管 ModelConnection |
+| `model("name", backend_type=BackendType.PROXY)` | 保留 AgentRun ModelProxy 链路 |
+| `model(ModelService(...))` | 保留对象中 Endpoint 和凭证对应的 AgentRun Direct 链路 |
+| `tool_resource("name")` | 按名称访问 AgentCore 托管 MCP |
+| `tool_resource(ToolResource(...))` | 保留 AgentRun 自定义 Tool/MCP 链路 |
+| `skill_tools("name")` | 按名称下载并使用 AgentCore 托管 Skill |
+| `skill_tools(name=None, skills_dir=...)` | 保留 AgentRun 本地 Skill 链路 |
+
+KnowledgeBase、Memory、SessionStore、Credential、Sandbox 等一期未映射能力继续走
+AgentRun 原链路，并使用用户配置的 `AGENTRUN_*` Endpoint 和鉴权信息。兼容层会在
+发起数据面请求前确定后端。兼容模式下，只有 AgentCore 资源发现明确返回
+ModelConnection 或 MCP 名称不存在时，才保留 AgentRun 原链路；其他资源发现错误和
+AgentCore 数据面请求失败均不会自动改走 AgentRun。
+
+云上 AgentCore 身份和资源配置由 AgentCore SDK 从运行环境读取。本地调试时按
+AgentCore SDK 的要求配置 `AGENTCORE_DEBUG_TOKEN`，不需要把 AgentCore 凭证传给
+AgentRun `Config`。
+
+Python 3.10 下的 AgentScope 1.x 继续使用 AgentRun 原模型链路，需要配置
+AgentRun Endpoint 和鉴权信息；Python 3.11 及以上版本的 AgentScope 2.x 使用
+AgentCore 模型适配。

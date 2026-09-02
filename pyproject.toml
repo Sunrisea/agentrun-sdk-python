@@ -11,6 +11,7 @@ dependencies = [
     "python-dotenv>=1.2.1",
     "typing-extensions>=4.15.0",
     "litellm>=1.79.3",
+    "alibabacloud-agentcore-sdk>=0.2.0,<0.3.0",
     "alibabacloud-devs20230714>=2.4.1",
     "pydash>=8.0.5",
     "alibabacloud-agentrun20250910>=5.6.3",
@@ -37,6 +38,7 @@ server = [
 
 langchain = [
     "langchain>=1.0.0; python_version >= '3.10'",
+    "langchain-anthropic>=1.0.0; python_version >= '3.10'",
     "langchain-openai>=1.0.0; python_version >= '3.10'",
     "langchain-deepseek>=1.0.1; python_version >= '3.10'",
 ]
@@ -46,7 +48,8 @@ google-adk = [
 ]
 
 agentscope = [
-    "agentscope>=0.1.6",
+    "agentscope>=0.1.6,<2.0.0; python_version < '3.11'",
+    "agentscope>=2.0.0,<3.0.0; python_version >= '3.11'",
 ]
 
 crewai = [
@@ -63,7 +66,7 @@ playwright = [
 ]
 
 mcp = [
-    "mcp>=1.21.2; python_version >= '3.10'",
+    "mcp>=1.21.2,<2; python_version >= '3.10'",
 ]
 
 tablestore = [
@@ -72,6 +75,7 @@ tablestore = [
 
 langgraph = [
     "langgraph>=0.2.0; python_version >= '3.10'",
+    "langchain-anthropic>=1.0.0; python_version >= '3.10'",
     "langchain-core>=0.3.0; python_version >= '3.10'",
     "langchain-openai>=1.0.0; python_version >= '3.10'",
     "langchain-deepseek>=1.0.1; python_version >= '3.10'",

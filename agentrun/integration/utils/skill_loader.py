@@ -775,6 +775,21 @@ def skill_tools(
         >>> # 自定义超时 / Custom timeout
         >>> ts = skill_tools(skills_dir=".skills", command_timeout=120)
     """
+    if isinstance(name, str) or (isinstance(name, list) and name):
+        from agentrun.compat.agentcore import (
+            is_agentcore_runtime,
+            managed_skill_tools,
+        )
+
+        if is_agentcore_runtime():
+            names = [name] if isinstance(name, str) else name
+            return managed_skill_tools(
+                names,
+                skills_dir=skills_dir,
+                command_approval=command_approval,
+                command_timeout=command_timeout,
+            )
+
     remote_names: List[str] = []
 
     if name is not None:

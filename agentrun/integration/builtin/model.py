@@ -4,7 +4,7 @@
 Provides convenient functions for quickly creating common model objects.
 """
 
-from typing import Optional, overload, TypedDict, Union
+from typing import Optional, TypedDict, Union, overload
 
 from typing_extensions import NotRequired, Unpack
 
@@ -70,6 +70,19 @@ def model(
     model = kwargs.get("model")
 
     if isinstance(input, str):
+        from agentrun.compat.agentcore import (
+            is_agentcore_runtime,
+            managed_model,
+        )
+
+        if is_agentcore_runtime() and backend_type != BackendType.PROXY:
+            return managed_model(
+                input,
+                model_name=model,
+                legacy_config=config,
+                legacy_backend_type=backend_type,
+            )
+
         from agentrun.model.client import ModelClient
 
         client = ModelClient(config=config)
