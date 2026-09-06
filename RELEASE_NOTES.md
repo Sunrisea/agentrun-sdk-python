@@ -14,6 +14,8 @@
   AgentCore data-plane requests are not retried through AgentRun.
 - AgentScope 1.x on Python 3.10 keeps the original AgentRun model route;
   AgentScope 2.x on Python 3.11+ uses the AgentCore adapter.
+- AgentScope 2.x tool conversion now returns native `FunctionTool` objects for
+  Toolkit registration and execution; AgentScope 1.x keeps function-based tools.
 
 ### Breaking Changes
 

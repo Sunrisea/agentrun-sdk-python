@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import json
+from importlib.metadata import version
 from typing import Any, List
 
 from agentscope.message import TextBlock
@@ -56,4 +57,17 @@ class AgentScopeToolAdapter(ToolAdapter):
     def from_canonical(self, tools: List[CanonicalTool]) -> Any:
         """将标准格式转换为 AgentScope 工具 / AgentScope Tool Adapter"""
 
-        return self.function_tools(tools, modify_func=self._modify_tool)
+        if int(version("agentscope").split(".")[0]) < 2:
+            return self.function_tools(tools, modify_func=self._modify_tool)
+
+        from agentscope.tool import FunctionTool
+
+        return [
+            FunctionTool(
+                function,
+                name=function.__name__,
+                description=tool.description,
+                input_schema=tool.parameters,
+            )
+            for tool, function in zip(tools, self.function_tools(tools))
+        ]

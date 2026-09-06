@@ -255,3 +255,7 @@ AgentRun `Config`。
 Python 3.10 下的 AgentScope 1.x 继续使用 AgentRun 原模型链路，需要配置
 AgentRun Endpoint 和鉴权信息；Python 3.11 及以上版本的 AgentScope 2.x 使用
 AgentCore 模型适配。
+
+AgentScope 工具按安装的主版本转换：2.x 返回原生 `FunctionTool`，可传入
+`Toolkit(tools=tools.to_agentscope())`；1.x 保留函数列表，继续使用
+`toolkit.register_tool_function()`。MCP、Skill 和自定义工具共用这一转换层。
